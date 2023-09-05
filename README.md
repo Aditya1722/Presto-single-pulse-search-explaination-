@@ -119,4 +119,39 @@ chunklen ?
         num_v_DMstr = {}
 
 ```
-* In this block code checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()`
+* In this block code we`re deciding to do a search or not by checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` by reading single pulse files 
+
+As they are referring to single pulse files funtion first let look into that 
+
+```
+def read_singlepulse_files(infiles, threshold, T_start, T_end):
+    DMs = []
+    candlist = []
+    num_v_DMstr = {}
+    for ii, infile in enumerate(infiles):
+        if infile.endswith(".singlepulse") or infile.endswith(".singlepulse.gz"):
+            filenmbase = infile[:infile.rfind(".singlepulse")]
+        else:
+            filenmbase = infile
+        info = infodata.infodata(filenmbase+".inf")
+        DMstr = "%.2f"%info.DM
+        DMs.append(info.DM)
+        num_v_DMstr[DMstr] = 0
+        if ii==0:
+            info0 = info
+        if os.stat(infile)[6]:
+            try:
+                cands = np.loadtxt(infile)
+                if len(cands.shape)==1:
+                    cands = np.asarray([cands])
+                for cand in cands:
+                    if cand[2] < T_start: continue
+                    if cand[2] > T_end: break
+                    if cand[1] >= threshold:
+                        candlist.append(candidate(*cand))
+                        num_v_DMstr[DMstr] += 1
+            except:  # No candidates in the file
+                IndexError
+    DMs.sort()
+    return info0, DMs, candlist, num_v_DMstr
+```
