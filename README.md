@@ -46,6 +46,32 @@ and the flags true/false  just to put the dest value to true or false`
 `help` - use to give some info about the command 
 `dest` - destination 
 
+```
+ if len(args)==0:
+        if opts.globexp==None:
+            print(full_usage)
+            sys.exit(0)
+        else:
+            args = []
+            for globexp in opts.globexp.split():
+                args += glob.glob(globexp)
+ useffts = True
+ dosearch = True
+ if opts.xwin:
+    pgplot_device = "/XWIN"
+ else:
+    pgplot_device = ""
+
+```
+In this block of code `opts.globexp` is checking the variable if given any in command line . eg ` --globexp .txt `
+
+usefft & dosearch are assigned to be true 
+
+if `opts.xwin` is true then pgplot_device is assignned to "/XWIN" otherwise "" 
+
+```
+userfft = TRUE
+dosearch = True
 
 
 
