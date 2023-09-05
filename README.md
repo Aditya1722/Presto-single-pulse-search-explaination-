@@ -39,3 +39,7 @@ End of completion we used `(opts, args) = parser.parse_args()` to tell `optparse
 `parse_args()` returns two values:
 * options, an object containing values for all of your options—e.g. if --file takes a single string argument, then options.file will be the filename supplied by the user, or None if the user did not supply that option
 * args, the list of positional arguments leftover after parsing options
+here 
+Action = store  means that to take the next argument and store it to your choosen destination
+and the flags true/false  just to put the dest value to true or false
+
