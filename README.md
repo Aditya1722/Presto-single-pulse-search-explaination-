@@ -35,6 +35,7 @@ def main():
 This is the part of main fucntion in which they are defining list of options for users to use by using `optparse` python module  
 
 End of completion we used `(opts, args) = parser.parse_args()` to tell `optparse` that we`re done
+
 `parse_args()` returns two values:
-*options, an object containing values for all of your options—e.g. if --file takes a single string argument, then options.file will be the filename supplied by the user, or None if the user did not supply that option
+* options, an object containing values for all of your options—e.g. if --file takes a single string argument, then options.file will be the filename supplied by the user, or None if the user did not supply that option
 * args, the list of positional arguments leftover after parsing options
