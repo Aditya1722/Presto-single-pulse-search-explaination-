@@ -238,4 +238,11 @@ def make_fftd_kerns(downfacts, fftlen):
         fftd_kerns.append(rfft(kern / np.sqrt(downfact), -1))
     return fftd_kerns
 ```
-
+* Int his block assigning `fftd_kerns` an empty list 
+* `For` loop over downfact values and creating an array of 0 of length `fftlen`(value given in main fucntion ) for each `downfact` value .
+* making a shape of kernel for each downfact values depedning on if it is odd or even
+* but why is it depending on 2 for even  ?
+* how is it making a shape when whole fftlen is made 1
+* after this we are normalising the thing
+* it will always return the last kernel value no ?
+*   
