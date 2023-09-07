@@ -204,7 +204,7 @@ some condition and if that satisfies will store it as a candidate
 
                 # If last break spans to end of file, don't read it in (its just padding)
                 if offregions[-1][1] == N - 1:
-                    N = offregions[-1][0] + 1
+                    N = offregions[-1][0] + 1  
 ``` 
 * Here we search for `filname` if it ends with `.dat` file or not if yes then we use `rfind` to find the `.dat` file index and try to save only name of the file in `filenmbase` if not then `filename` is saved as it is in `filenmbase`
 
@@ -245,4 +245,45 @@ def make_fftd_kerns(downfacts, fftlen):
 * how is it making a shape when whole fftlen is made 1
 * after this we are normalising the thing
 * it will always return the last kernel value no ?
-*   
+* now continution of code from the main funtion
+  ```
+  if info.breaks:
+                offregions = list(zip([x[1] for x in info.onoff[:-1]],
+                                 [x[0] for x in info.onoff[1:]]))
+
+                # If last break spans to end of file, don't read it in (its just padding)
+                if offregions[-1][1] == N - 1:
+                    N = offregions[-1][0] + 1
+  ```
+
+* what is info.break ?
+* if it is true then it creates a list named `offregion`
+* no idea about this ?
+  ```
+  # Compute the file length in detrendlens
+            roundN = N // detrendlen * detrendlen
+            numchunks = roundN // chunklen
+            # Read in the file
+            print('Reading "%s"...'%filenm)
+            timeseries = np.fromfile(filenm, dtype=np.float32, count=roundN)
+            # Split the timeseries into chunks for detrending
+            numblocks = roundN // detrendlen
+            timeseries.shape = (numblocks, detrendlen)
+            stds = np.zeros(numblocks, dtype=np.float64)
+            # de-trend the data one chunk at a time
+            print('  De-trending the data and computing statistics...')
+            for ii, chunk in enumerate(timeseries):
+                if opts.fast:  # use median removal instead of detrending (2x speedup)
+                    tmpchunk = chunk.copy()
+                    tmpchunk.sort()
+                    med = tmpchunk[detrendlen//2]
+                    chunk -= med
+                    tmpchunk -= med
+                else:
+                    # The detrend calls are the most expensive in the program
+                    timeseries[ii] = scipy.signal.detrend(chunk, type='linear')
+                    tmpchunk = timeseries[ii].copy()
+                    tmpchunk.sort()
+  ```
+* The purpose of this calculation to find roundN is to handle cases where the data length (N) is not an exact multiple of detrendlen, ensuring that you work with complete chunks of detrendlen and any leftover data at the end is excluded from further analysis.
+* 
