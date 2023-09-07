@@ -206,3 +206,6 @@ some condition and if that satisfies will store it as a candidate
                 if offregions[-1][1] == N - 1:
                     N = offregions[-1][0] + 1
 ``` 
+Here we search for `filname` if it ends with `.dat` file or not if yes then we use `rfind` to find the `.dat` file index and try to save only name of the file in `filenmbase` if not then `filename` is saved as it is in `filenmbase`
+
+Filenmbase we got from previous step is added with an extension `.inf` to extract the informatiom using `info.info()` and save it in `info`
