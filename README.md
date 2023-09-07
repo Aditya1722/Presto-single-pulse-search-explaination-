@@ -215,4 +215,27 @@ some condition and if that satisfies will store it as a candidate
 * it checks if `maxwidth`(which you entered ) is > than 0 
   > if yes then compare it with each (`down_sample list` values)*`dt`  and if it is < than `maxwidth` than add it to the list of `downnfacts`
   > if no then store all the values which are less than the `max_downfact` which is already defined as 30
+* if `downsample` list is empty then the first value of `default_sample` if filled
+* This part runs only for first file it will take informtion of `N` and `dt` and store it in some variable  `orig_N` & `orig_dt`
+* if `useffts` is true then it runs a function `make_fftd_kerns` by sending argument - `default_downfacts,fftlen`
+As we encontered this function `make_fft_kerns` so we will discuss that before moving forward to next code part d
+```
+def make_fftd_kerns(downfacts, fftlen):
+    fftd_kerns = []
+    for downfact in downfacts:
+        kern = np.zeros(fftlen, dtype=np.float32)
+        # These offsets produce kernels that give results
+        # equal to scipy.signal.convolve
+        if downfact % 2:  # Odd number
+            kern[:downfact//2+1] += 1.0
+            kern[-(downfact//2):] += 1.0
+        else:             # Even number
+            kern[:downfact//2+1] += 1.0
+            if (downfact > 2):
+                kern[-(downfact//2-1):] += 1.0
+        # The following normalization preserves the
+        # RMS=1 characteristic of the data
+        fftd_kerns.append(rfft(kern / np.sqrt(downfact), -1))
+    return fftd_kerns
+```
 
