@@ -210,7 +210,9 @@ some condition and if that satisfies will store it as a candidate
 
 * Filenmbase we got from previous step is added with an extension `.inf` to extract the informatiom using `info.info()` and save it in `info`
 * Then we extract dm info from info.dm and first add it in DMstr and then append DM values in `DMs`
-* Then were extracting the info of `dt`(time step size) and `N` no. of channels so we can get observation time(`obstime`)
-*  
-
+* Then were extracting the info of `dt`(time step size) and `N`(no. of time bing )so we can get observation time(`obstime`)
+* `maxwidth` is either given by you or default
+* it checks if `maxwidth`(which you entered ) is > than 0 
+  > if yes then compare it with each (`down_sample list` values)*`dt`  and if it is < than `maxwidth` than add it to the list of `downnfacts`
+  > if no then store all the values which are less than the `max_downfact` which is already defined as 30
 
