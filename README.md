@@ -119,7 +119,7 @@ chunklen ?
         num_v_DMstr = {}
 
 ```
-* In this block code we`re deciding to do a search or not by checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` by reading single pulse files 
+* In this block code we're deciding to do a search or not by checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` by reading single pulse files 
 
 As they are referring to single pulse files funtion first let look into that 
 
