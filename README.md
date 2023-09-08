@@ -297,4 +297,56 @@ de-trend the data one chunk at a time
   > quicker than more complex detrending methods.
 *  if `opts.fast` is false then at every chunk we will use `scipy.signal.detrend(data,type'linear')`
  > why we even doing sorting ? in this sorting will be done of frequency ?
+```
+# The following gets rid of (hopefully) most of the 
+                # outlying values (i.e. power dropouts and single pulses)
+                # If you throw out 5% (2.5% at bottom and 2.5% at top)
+                # of random gaussian deviates, the measured stdev is ~0.871
+                # of the true stdev.  Thus the 1.0/0.871=1.148 correction below.
+                # The following is roughly .std() since we already removed the median
+                stds[ii] = np.sqrt((tmpchunk[detrendlen//40:-detrendlen//40]**2.0).sum() /
+                                    (0.95*detrendlen))
+            stds *= 1.148
+```
+* Here we remove 5% what is tom and bottom ?
+* what is this formula o std ?
+* why we correcting for stds? 
+* 1.148 correction factor addition in stds
+* why we diving detrendln by by 40 bcz we want to take only middle portion of data s outliers are removed .
+
+```
+# sort the standard deviations and separate those with
+            # very low or very high values
+            sort_stds = stds.copy()
+            sort_stds.sort()
+            # identify the differences with the larges values (this
+            # will split off the chunks with very low and very high stds
+            locut = (sort_stds[1:numblocks//2+1] -
+                     sort_stds[:numblocks//2]).argmax() + 1
+            hicut = (sort_stds[numblocks//2+1:] -
+                     sort_stds[numblocks//2:-1]).argmax() + numblocks//2 - 2
+            std_stds = np.std(sort_stds[locut:hicut])
+            median_stds = sort_stds[(locut+hicut)//2]
+            print("    pseudo-median block standard deviation = %.2f" % (median_stds))
+            if (opts.badblocks):
+                lo_std = median_stds - 4.0 * std_stds
+                hi_std = median_stds + 4.0 * std_stds
+                # Determine a list of "bad" chunks.  We will not search these.
+                bad_blocks = np.nonzero((stds < lo_std) | (stds > hi_std))[0]
+                print("    identified %d bad blocks out of %d (i.e. %.2f%%)" % \
+                      (len(bad_blocks), len(stds),
+                       100.0*float(len(bad_blocks))/float(len(stds))))
+                stds[bad_blocks] = median_stds
+            else:
+                bad_blocks = []
+            print("  Now searching...")
+
+```
+* first we copied the stds and sort it in an array `sort_stds` then try to find the max std deviation in the lower and higher part of `sort_stds`
+* Then store those indexes of max change and calculate the std of std and store it in std_stds  and also median of this in `median_stds`
 * 
+```
+# Now normalize all of the data and reshape it to 1-D
+            timeseries /= stds[:,np.newaxis]
+            timeseries.shape = (roundN,)
+```
