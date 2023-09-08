@@ -344,6 +344,7 @@ de-trend the data one chunk at a time
 ```
 * first we copied the stds and sort it in an array `sort_stds` then try to find the max std deviation in the lower and higher part of `sort_stds`
 * Then store those indexes of max change and calculate the std of std and store it in std_stds  and also median of this in `median_stds`
+* Now searching for bad chunks to not waste time on searching them
 * 
 ```
 # Now normalize all of the data and reshape it to 1-D
