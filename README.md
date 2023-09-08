@@ -285,5 +285,10 @@ def make_fftd_kerns(downfacts, fftlen):
                     tmpchunk = timeseries[ii].copy()
                     tmpchunk.sort()
   ```
-* The purpose of this calculation to find roundN is to handle cases where the data length (N) is not an exact multiple of detrendlen, ensuring that you work with complete chunks of detrendlen and any leftover data at the end is excluded from further analysis.
+* The purpose of this starting calculation to find roundN is to handle cases where the data length (N) is not an exact multiple of detrendlen, ensuring that you work with complete chunks of detrendlen and any leftover data at the end is excluded from further analysis.
+* `numchunks` is the how many chunks of `chunkslen` can fit in total obs length `(roundN)`
+* we reads the binary data from the specified file (filenm) using `np.filefrom` and loads it into the timeseries array
+* splitting the file into chunks for detrending by finding `numblock`
+* 
+*  
 * 
