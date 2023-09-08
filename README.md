@@ -289,6 +289,12 @@ def make_fftd_kerns(downfacts, fftlen):
 * `numchunks` is the how many chunks of `chunkslen` can fit in total obs length `(roundN)`
 * we reads the binary data from the specified file (filenm) using `np.filefrom` and loads it into the timeseries array
 * splitting the file into chunks for detrending by finding `numblock`
-* 
-*  
+* rehaping the timeseries into rows = numblocks column = detrendlen to form a 2D array which will contains data as `eg,` Row 1 contains the first 200 data points (from index 0 to 199). Row 2 contains the next 200 data points (from index 200 to 399).
+* `stds` - making 1D array of len numblock
+de-trend the data one chunk at a time
+* As enumerates returns  a tuple after every iteration as index and the actual data so we assigned a for loop ii(index) and chunk(actual data)
+* if `opts.fast`(usefaster method of detrending) is true then remove median values from chunks(chunk we`re copying is time data or frequency data )
+  > quicker than more complex detrending methods.
+*  if `opts.fast` is false then at every chunk we will use `scipy.signal.detrend(data,type'linear')`
+ > why we even doing sorting ? in this sorting will be done of frequency ?
 * 
