@@ -350,4 +350,96 @@ de-trend the data one chunk at a time
 # Now normalize all of the data and reshape it to 1-D
             timeseries /= stds[:,np.newaxis]
             timeseries.shape = (roundN,)
+            # And set the data in the bad blocks to zeros
+            # Even though we don't search these parts, it is important
+            # because of the overlaps for the convolutions
+            for bad_block in bad_blocks:
+                loind, hiind = bad_block*detrendlen, (bad_block+1)*detrendlen
+                timeseries[loind:hiind] = 0.0
+            # Convert to a set for faster lookups below
+            bad_blocks = set(bad_blocks)
 ```
+* In this we normalize the time series by diving with their respective `stds` and convert it into 1D
+* setting all bad blocks in timeseries to 0
+```
+# Step through the data
+            dm_candlist = []
+            for chunknum in range(numchunks):
+                loind = chunknum*chunklen-overlap
+                hiind = (chunknum+1)*chunklen+overlap
+                # Take care of beginning and end of file overlap issues
+                if (chunknum==0): # Beginning of file
+                    chunk = np.zeros(worklen, dtype=np.float32)
+                    chunk[overlap:] = timeseries[loind+overlap:hiind]
+                elif (chunknum==numchunks-1): # end of the timeseries
+                    chunk = np.zeros(worklen, dtype=np.float32)
+                    chunk[:-overlap] = timeseries[loind:hiind-overlap]
+                else:
+                    chunk = timeseries[loind:hiind]
+```
+```
+# Make a set with the current block numbers
+                lowblock = blocks_per_chunk * chunknum
+                currentblocks = set(np.arange(blocks_per_chunk) + lowblock)
+                localgoodblocks = np.asarray(list(currentblocks -
+                                                   bad_blocks)) - lowblock
+                # Search this chunk if it is not all bad
+                if len(localgoodblocks):
+                    # This is the good part of the data (end effects removed)
+                    goodchunk = chunk[overlap:-overlap]
+```
+
+```
+# need to pass blocks/chunklen, localgoodblocks
+                    # dm_candlist, dt, opts.threshold to cython routine
+
+                    # Search non-downsampled data first
+                    # NOTE:  these nonzero() calls are some of the most
+                    #        expensive calls in the program.  Best bet would 
+                    #        probably be to simply iterate over the goodchunk
+                    #        in C and append to the candlist there.
+                    hibins = np.flatnonzero(goodchunk>opts.threshold)
+                    hivals = goodchunk[hibins]
+                    hibins += chunknum * chunklen
+                    hiblocks = hibins // detrendlen
+                    # Add the candidates (which are sorted by bin)
+                    for bin, val, block in zip(hibins, hivals, hiblocks):
+                        if block not in bad_blocks:
+                            time = bin * dt
+                            dm_candlist.append(candidate(info.DM, val, time, bin, 1))
+
+                    # Prepare our data for the convolution
+                    if useffts: fftd_chunk = rfft(chunk, -1)
+
+                    # Now do the downsampling...
+                    for ii, downfact in enumerate(downfacts):
+                        if useffts: 
+                            # Note:  FFT convolution is faster for _all_ downfacts, even 2
+                            goodchunk = fft_convolve(fftd_chunk, fftd_kerns[ii],
+                                                     overlap, -overlap)
+                        else:
+                            # The normalization of this kernel keeps the post-smoothing RMS = 1
+                            kernel = np.ones(downfact, dtype=np.float32) / \
+                                     np.sqrt(downfact)
+                            smoothed_chunk = scipy.signal.convolve(chunk, kernel, 1)
+                            goodchunk = smoothed_chunk[overlap:-overlap]
+                        #hibins = np.nonzero(goodchunk>opts.threshold)[0]
+                        hibins = np.flatnonzero(goodchunk>opts.threshold)
+                        hivals = goodchunk[hibins]
+                        hibins += chunknum * chunklen
+                        hiblocks = hibins // detrendlen
+                        hibins = hibins.tolist()
+                        hivals = hivals.tolist()
+                        # Now walk through the new candidates and remove those
+                        # that are not the highest but are within downfact/2
+                        # bins of a higher signal pulse
+                        hibins, hivals = prune_related1(hibins, hivals, downfact)
+                        # Insert the new candidates into the candlist, but
+                        # keep it sorted...
+                        for bin, val, block in zip(hibins, hivals, hiblocks):
+                            if block not in bad_blocks:
+                                time = bin * dt
+                                bisect.insort(dm_candlist,
+                                              candidate(info.DM, val, time, bin, downfact))
+```
+
