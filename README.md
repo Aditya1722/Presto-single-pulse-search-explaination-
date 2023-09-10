@@ -380,7 +380,8 @@ de-trend the data one chunk at a time
 * Created  a DM list
 * `numchunks` is the no. of chunks in `roundN` of length `chunklen`
 * `loin` & `hiind` gives the idex of starting & ending of that chunk  in this overalp concept is not clear ?
-* begining and end is dealt differently for copying the data from timeseries to `chunk` 
+* begining and end is dealt differently for copying the data from timeseries to `chunk`
+* To understand the expression you can try with the image belowfor better visualisation (i struggled without observation ) 
 ![overal diagram](https://github.com/Aditya1722/Presto-single-pulse-search-explaination-/assets/73752922/d5652001-e1de-4ff2-aa43-c205da4d31ff)
 
 ```
@@ -394,7 +395,9 @@ de-trend the data one chunk at a time
                     # This is the good part of the data (end effects removed)
                     goodchunk = chunk[overlap:-overlap]
 ```
-* In this code block 
+* In this code block we dealing with the blocks in a chunk - by finding no. of blocks  i'm away from current chunk from  `lowblock`
+* Then for fidning the current chuck index we use the block information as seen above
+* `localgoodblock` 
 ```
 # need to pass blocks/chunklen, localgoodblocks
                     # dm_candlist, dt, opts.threshold to cython routine
@@ -413,7 +416,13 @@ de-trend the data one chunk at a time
                         if block not in bad_blocks:
                             time = bin * dt
                             dm_candlist.append(candidate(info.DM, val, time, bin, 1))
-
+```
+* In this block we make a `variable` and store the non zeros values indexes using `np.flatnonzerofrom()` from `goodchunk` with a condition it should be greater than threshold S/N .
+* `hivals` stores the values of usign `hibins`
+* not understanding the hibins updating system
+*     
+*  
+```
                     # Prepare our data for the convolution
                     if useffts: fftd_chunk = rfft(chunk, -1)
 
