@@ -426,7 +426,11 @@ de-trend the data one chunk at a time
 ```
                     # Prepare our data for the convolution
                     if useffts: fftd_chunk = rfft(chunk, -1)
-
+```
+* Doing fft of the chunk where sign tells if you wan  do inverse or fft and stored in `fftd_chunk`
+* real to complex
+  
+```
                     # Now do the downsampling...
                     for ii, downfact in enumerate(downfacts):
                         if useffts: 
