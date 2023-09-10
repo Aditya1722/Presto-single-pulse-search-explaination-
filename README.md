@@ -418,9 +418,10 @@ de-trend the data one chunk at a time
                             dm_candlist.append(candidate(info.DM, val, time, bin, 1))
 ```
 * In this block we make a `variable` and store the non zeros values indexes using `np.flatnonzerofrom()` from `goodchunk` with a condition it should be greater than threshold S/N .
-* `hivals` stores the values of usign `hibins`
-* not understanding the hibins updating system
-*     
+* hibins contains the indices of potential candidates within the entire dataset.
+* hivals contains the values of these potential candidates.
+* hiblocks contains the block numbers where these candidates were found within the current chunk.
+* Doesn't bin contains indexes of a chunk ? calculate time of each then store info in `dm_candidate`
 *  
 ```
                     # Prepare our data for the convolution
