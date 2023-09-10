@@ -1,4 +1,4 @@
-# Presto-single-pulse-search-explaination-
+d# Presto-single-pulse-search-explaination-
 In the first line we assigning name to the block that if it is executed as a main prgram or module etc .
 
 imported `hotshot` - used to profile the code block i.e statistical infos like running time and etc 
@@ -443,7 +443,7 @@ de-trend the data one chunk at a time
                                      np.sqrt(downfact)
                             smoothed_chunk = scipy.signal.convolve(chunk, kernel, 1)
                             goodchunk = smoothed_chunk[overlap:-overlap]
-                        #hibins = np.nonzero(goodchunk>opts.threshold)[0]
+                        
                         hibins = np.flatnonzero(goodchunk>opts.threshold)
                         hivals = goodchunk[hibins]
                         hibins += chunknum * chunklen
@@ -463,3 +463,7 @@ de-trend the data one chunk at a time
                                               candidate(info.DM, val, time, bin, downfact))
 ```
 
+* first we are  convolving using the info og  fft  and kernel we have
+* cant understand the else part here
+* good chunk we get from this will be used to calculate again the hibins, hivals , hiblocks
+* prune_related1 function is responsible for removing candidates that are close to other candidates but less significant. 
