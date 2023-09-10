@@ -364,7 +364,7 @@ de-trend the data one chunk at a time
 ```
 # Step through the data
             dm_candlist = []
-            for chunknum in range(numchunks):
+            for chunknum in range(numnuchunks):
                 loind = chunknum*chunklen-overlap
                 hiind = (chunknum+1)*chunklen+overlap
                 # Take care of beginning and end of file overlap issues
@@ -377,6 +377,12 @@ de-trend the data one chunk at a time
                 else:
                     chunk = timeseries[loind:hiind]
 ```
+* Created  a DM list
+* `numchunks` is the no. of chunks in `roundN` of length `chunklen`
+* `loin` & `hiind` gives the idex of starting & ending of that chunk  in this overalp concept is not clear ?
+* begining and end is dealt differently for copying the data from timeseries to `chunk` 
+![overal diagram](https://github.com/Aditya1722/Presto-single-pulse-search-explaination-/assets/73752922/d5652001-e1de-4ff2-aa43-c205da4d31ff)
+
 ```
 # Make a set with the current block numbers
                 lowblock = blocks_per_chunk * chunknum
@@ -388,7 +394,7 @@ de-trend the data one chunk at a time
                     # This is the good part of the data (end effects removed)
                     goodchunk = chunk[overlap:-overlap]
 ```
-
+* In this code block 
 ```
 # need to pass blocks/chunklen, localgoodblocks
                     # dm_candlist, dt, opts.threshold to cython routine
