@@ -110,9 +110,9 @@ and the flags true/false  just to put the dest value to true or false`
 * detrendfact ? (cheking if detrendfact have the values mentioned in code )
 * dtrendlen is decided
 * Then dtrendlen ,chunklen,fflten all are recalculated considering dtrendfact user input (next2_to_n is a lib imported from presto )
-* blocks per chunk is devision of  chunkslen and dtrendlen
-* overlap , worklen is defined and max_downfact and default are constant
-* checking arg
+* `blocks per chunk` is no. of blocks in a chunk we can have
+* overlap , worklen is defined whereas  max_downfact and default_downfact are constant
+* checking arg[0] contains what type of extension and we will save it in `filenmbase` without extension 
 * 
 
 ```
