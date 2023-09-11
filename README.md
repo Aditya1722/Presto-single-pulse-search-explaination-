@@ -75,7 +75,6 @@ and the flags true/false  just to put the dest value to true or false`
 
 ```
 * In this block of code `opts.globexp` is checking the variable if given any in command line . eg ` --globexp .txt `
-
 * usefft & dosearch are assigned to be true 
 
 * if `opts.xwin` is true then pgplot_device is assignned to "/XWIN" otherwise "" 
@@ -104,12 +103,12 @@ and the flags true/false  just to put the dest value to true or false`
     else:
         filenmbase = args[0]
 ```
-* fftlen = 8192 (for fourier transform )
-* chunklen ?
+* `fftlen` = 8192 (for fourier transform )
+* `chunklen` for chunks you wana divide .
 * assert statement is used to check if a condition is True, and if it's not, it raises an error.
-* detrendfact ? (cheking if detrendfact have the values mentioned in code )
-* dtrendlen is decided
-* Then dtrendlen ,chunklen,fflten all are recalculated considering dtrendfact user input (next2_to_n is a lib imported from presto )
+* `detrendfact` factor of 2  (checking if detrendfact have the values mentioned in code )
+* `dtrendlen` is decided by `dtrendfact`
+* Then dtrendlen , chunklen , fflten all are recalculated considering dtrendfact user input (next2_to_n is a lib imported from presto )
 * `blocks per chunk` is no. of blocks in a chunk we can have
 * overlap , worklen is defined whereas  max_downfact and default_downfact are constant
 * checking arg[0] contains what type of extension and we will save it in `filenmbase` without extension 
@@ -127,11 +126,9 @@ and the flags true/false  just to put the dest value to true or false`
         num_v_DMstr = {}
 
 ```
-* From previous code block if we get a file with extension `.singlepulse` then dosearch is se to false as we have seen .
+* From previous code block if we get a file with extension `.singlepulse` then dosearch is set to false as we have seen .
 * In this block code we're deciding to do a search or not by checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` by reading single pulse files
-* Here i dont understand the use of num_v_DMstr
 * As they are referring to single pulse files funtion first let look into down below code :
-
 ```
 def read_singlepulse_files(infiles, threshold, T_start, T_end):
     DMs = []
@@ -151,7 +148,7 @@ def read_singlepulse_files(infiles, threshold, T_start, T_end):
         if os.stat(infile)[6]:
             try:
                 cands = np.loadtxt(infile)
-                if len(cands.shape)==1:
+                if len(cands.shape)==1:w
                     cands = np.asarray([cands])
                 for cand in cands:
                     if cand[2] < T_start: continue
@@ -168,7 +165,8 @@ def read_singlepulse_files(infiles, threshold, T_start, T_end):
 * In this code block we are trying to read single pulse file(main objective ) 
 * Load all the info in cands (here doubt diff between cand and cand )
 * some condition and if that satisfies will store it as a candidate
-`candiate` class is used to store that value in a candidate list ?
+*  `num_v_DMstr` is used to count no. of candidates of partiuclar DM 
+* `candiate` class is used to store that value in a candidate list ?
 ```
  # Loop over the input files
         for filenm in args:
@@ -196,19 +194,21 @@ def read_singlepulse_files(infiles, threshold, T_start, T_end):
                 if useffts:
                     fftd_kerns = make_fftd_kerns(default_downfacts, fftlen)
 ``` 
-* Here we search for `filname` if it ends with `.dat` file or not if yes then we use `rfind` to find the `.dat` file index and try to save only name of the file in `filenmbase` if not then `filename` is saved as it is in `filenmbase`
-
+* If `filname` ends with `.dat` file then using  `rfind` to find the `.dat` file index and try to save only name of the file in `filenmbase` if 
+  not then `filename` is saved as it is in `filenmbase`.
 * Filenmbase we got from previous step is added with an extension `.inf` to extract the informatiom using `info.info()` and save it in `info`
-* Then we extract dm info from info.dm and first add it in DMstr and then append DM values in `DMs`
+* Then we extract DM info from info.dm and first add it in DMstr and then append DM values in `DMs`
 * Then were extracting the info of `dt`(time step size) and `N`(no. of time bing )so we can get observation time(`obstime`)
 * `maxwidth` is either given by you or default
-* it checks if `maxwidth`(which you entered ) is > than 0 
-  > if yes then compare it with each (`down_sample list` values)*`dt`  and if it is < than `maxwidth` than add it to the list of `downnfacts`
-  > if no then store all the values which are less than the `max_downfact` which is already defined as 30
-* if `downsample` list is empty then the first value of `default_sample` if filled
+* it checks if `maxwidth`(which you entered) is > than 0 
+  > if yes then compare it with each (`default_sample list` values)*`dt`  and if it is < than `maxwidth` than add it to the list of `downnfacts`
+  > if no then store all the values which are less than the `max_downfact` which is already defined as 30.
+* If `downsample` list is empty then the first value of `default_sample` if filled.
 * This part runs only for first file it will take informtion of `N` and `dt` and store it in some variable  `orig_N` & `orig_dt`
-* if `useffts` is true then it runs a function `make_fftd_kerns` by sending argument - `default_downfacts,fftlen`
-* This code identifies breaks or gaps in the data, constructs offregions to represent data regions without breaks, and then checks if the last break extends to the end of the file. If it does, the code updates N to exclude the padding at the end of the data. This ensures that only the meaningful data regions are considered in further processing.
+* If `useffts` is true then it runs a function `make_fftd_kerns` by sending argument - `default_downfacts,fftlen`
+* This code identifies breaks or gaps in the data, constructs offregions to represent data regions without breaks, and then checks if the last 
+  break extends to the end of the file. If it does, the code updates N to exclude the padding at the end of the data. This ensures that only the 
+  meaningful data regions are considered in further processing.
 As we encontered this function `make_fft_kerns` so we will discuss that before moving forward to next code part d
 ```
 def make_fftd_kerns(downfacts, fftlen):
@@ -230,13 +230,10 @@ def make_fftd_kerns(downfacts, fftlen):
     return fftd_kerns
 ```
 * Int his block assigning `fftd_kerns` an empty list 
-* `For` loop over downfact values and creating an array of 0 of length `fftlen`(value given in main fucntion ) for each `downfact` value .
-* making a shape of kernel for each downfact values depedning on if it is odd or even
-* but why is it depending on 2 for even  ?
-* how is it making a shape when whole fftlen is made 1
-* after this we are normalising the thing
-* it will always return the last kernel value no ?
-* now continution of code from the main funtion
+* `For` loop over downfact values and creating an array of 0 of length `fftlen`(value given in main fucntion )
+* For each `downfact` value making a shape of kernel for each downfact values depending on if it is odd or even also if you look at the shape it is not like normal a box car for eg if you take downfact = 8 then the first half 5 index will be 1 and last 3 index will be 1 so that the total is 8 so that the last ones  will overlap with the next one.
+* Then normalising then taking fft of that .
+* Now continution of code from the main funtion
   ```
   if info.breaks:
                 offregions = list(zip([x[1] for x in info.onoff[:-1]],
@@ -276,18 +273,20 @@ def make_fftd_kerns(downfacts, fftlen):
                     tmpchunk = timeseries[ii].copy()
                     tmpchunk.sort()
   ```
-* The purpose of this starting calculation to find roundN is to handle cases where the data length (N) is not an exact multiple of detrendlen, ensuring that you work with complete chunks of detrendlen and any leftover data at the end is excluded from further analysis.
+* The purpose of this starting calculation to find roundN is to handle cases where the data length (N) is not an exact multiple of detrendlen, 
+  ensuring that you work with complete chunks of detrendlen and any leftover data at the end is excluded from further analysis.
 * `numchunks` is the how many chunks of `chunkslen` can fit in total obs length `(roundN)`
 * we reads the binary data from the specified file (filenm) using `np.filefrom` and loads it into the timeseries array
-* splitting the file into chunks for detrending by finding `numblock`
-* rehaping the timeseries into rows = numblocks column = detrendlen to form a 2D array which will contains data as `eg,` Row 1 contains the first 200 data points (from index 0 to 199). Row 2 contains the next 200 data points (from index 200 to 399).
-* `stds` - making 1D array of len numblock
-de-trend the data one chunk at a time
+* splitting the file into chunks for detrending by finding `numblock`.
+* Rehaping the timeseries into rows = numblocks column = detrendlen to form a 2D array which will contains data as `eg,` Row 1 contains the 
+  first 200 data points (from index 0 to 199). Row 2 contains the next 200 data points (from index 200 to 399).
+* `stds` - making 1D array of length numblock .
+* de-trend the data one chunk at a time .
 * As enumerates returns  a tuple after every iteration as index and the actual data so we assigned a for loop ii(index) and chunk(actual data)
 * if `opts.fast`(usefaster method of detrending) is true then remove median values from chunks(chunk we`re copying is time data or frequency data )
   > quicker than more complex detrending methods.
 *  if `opts.fast` is false then at every chunk we will use `scipy.signal.detrend(data,type'linear')`
- > why we even doing sorting ? in this sorting will be done of frequency ?
+ > we doing sorting for standard deviation 
 ```
 # The following gets rid of (hopefully) most of the 
                 # outlying values (i.e. power dropouts and single pulses)
