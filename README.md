@@ -32,19 +32,18 @@ def main():
                       default=False, help="gzip the output .singlepulse files")
     (opts, args) = parser.parse_args()
 ```
-This is the part of main fucntion in which they are defining list of options for users to use by using `optparse` python module  
+* This is the part of main fucntion in which they are defining list of options for users to use by using `optparse` python module  
 
-End of completion we used `(opts, args) = parser.parse_args()` to tell `optparse` that we`re done
+* End of completion we used `(opts, args) = parser.parse_args()` to tell `optparse` that we`re done
 
 `parse_args()` returns two values:
 * options, an object containing values for all of your options—e.g. if --file takes a single string argument, then options.file will be the filename supplied by the user, or None if the user did not supply that option
 * args, the list of positional arguments leftover after parsing options
 
-Here 
-`Action = store`tells to take the next argument and store it to your choosen destination
+*  `Action = store`tells to take the next argument and store it to your choosen destination
 and the flags true/false  just to put the dest value to true or false`
-`help` - use to give some info about the command 
-`dest` - destination 
+* `help` - use to give some info about the command 
+* `dest` - destination 
 
 ```
  if len(args)==0:
@@ -63,11 +62,11 @@ and the flags true/false  just to put the dest value to true or false`
     pgplot_device = ""
 
 ```
-In this block of code `opts.globexp` is checking the variable if given any in command line . eg ` --globexp .txt `
+* In this block of code `opts.globexp` is checking the variable if given any in command line . eg ` --globexp .txt `
 
-usefft & dosearch are assigned to be true 
+* usefft & dosearch are assigned to be true 
 
-if `opts.xwin` is true then pgplot_device is assignned to "/XWIN" otherwise "" 
+* if `opts.xwin` is true then pgplot_device is assignned to "/XWIN" otherwise "" 
 
 ```
 
@@ -93,10 +92,8 @@ if `opts.xwin` is true then pgplot_device is assignned to "/XWIN" otherwise ""
     else:
         filenmbase = args[0]
 ```
-fftlen = 8192 (for fourier transform )
-
-chunklen ?
-
+* fftlen = 8192 (for fourier transform )
+* chunklen ?
 * assert statement is used to check if a condition is True, and if it's not, it raises an error.
 * detrendfact ? (cheking if detrendfact have the values mentioned in code )
 * dtrendlen is decided
@@ -121,7 +118,7 @@ chunklen ?
 ```
 * In this block code we're deciding to do a search or not by checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` by reading single pulse files 
 
-As they are referring to single pulse files funtion first let look into that 
+* As they are referring to single pulse files funtion first let look into that 
 
 ```
 def read_singlepulse_files(infiles, threshold, T_start, T_end):
@@ -156,21 +153,13 @@ def read_singlepulse_files(infiles, threshold, T_start, T_end):
     return info0, DMs, candlist, num_v_DMstr
 ```
 
-In this code block we are trying to read single pulse file(main objective ) 
+* In this code block we are trying to read single pulse file(main objective ) 
 245 and 246 , 249 , 255 ,
 
-load all the info in cands (here doubt diff between cand and cand )
+* Load all the info in cands (here doubt diff between cand and cand )
 
-some condition and if that satisfies will store it as a candidate
+* some condition and if that satisfies will store it as a candidate
 `candiate` class is used to store that value in a candidate list ?
-
-
-
-
-
-
-
-
 
 ```
  # Loop over the input files
