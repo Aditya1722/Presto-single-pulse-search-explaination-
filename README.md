@@ -113,7 +113,6 @@ and the flags true/false  just to put the dest value to true or false`
 * `blocks per chunk` is no. of blocks in a chunk we can have
 * overlap , worklen is defined whereas  max_downfact and default_downfact are constant
 * checking arg[0] contains what type of extension and we will save it in `filenmbase` without extension 
-* 
 
 ```
 # Don't do a search, just read results and plot
@@ -128,9 +127,10 @@ and the flags true/false  just to put the dest value to true or false`
         num_v_DMstr = {}
 
 ```
-* In this block code we're deciding to do a search or not by checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` by reading single pulse files 
-
-* As they are referring to single pulse files funtion first let look into that 
+* From previous code block if we get a file with extension `.singlepulse` then dosearch is se to false as we have seen .
+* In this block code we're deciding to do a search or not by checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` by reading single pulse files
+* Here i dont understand the use of num_v_DMstr
+* As they are referring to single pulse files funtion first let look into down below code :
 
 ```
 def read_singlepulse_files(infiles, threshold, T_start, T_end):
