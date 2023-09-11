@@ -166,13 +166,9 @@ def read_singlepulse_files(infiles, threshold, T_start, T_end):
 ```
 
 * In this code block we are trying to read single pulse file(main objective ) 
-245 and 246 , 249 , 255 ,
-
 * Load all the info in cands (here doubt diff between cand and cand )
-
 * some condition and if that satisfies will store it as a candidate
 `candiate` class is used to store that value in a candidate list ?
-
 ```
  # Loop over the input files
         for filenm in args:
