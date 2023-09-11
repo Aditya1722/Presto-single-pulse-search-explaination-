@@ -1,4 +1,4 @@
-d# Presto-single-pulse-search-explaination-
+#Presto-single-pulse-search-explaination-
 In the first line we assigning name to the block that if it is executed as a main prgram or module etc .
 
 imported `hotshot` - used to profile the code block i.e statistical infos like running time and etc 
@@ -466,4 +466,33 @@ de-trend the data one chunk at a time
 * first we are  convolving using the info og  fft  and kernel we have
 * cant understand the else part here
 * good chunk we get from this will be used to calculate again the hibins, hivals , hiblocks
-* prune_related1 function is responsible for removing candidates that are close to other candidates but less significant. 
+* prune_related1 function is responsible for removing candidates that are close to other candidates but less significant.
+```
+# Now walk through the dm_candlist and remove the ones that
+            # are within the downsample proximity of a higher
+            # signal-to-noise pulse
+            dm_candlist = prune_related2(dm_candlist, downfacts)
+            print("  Found %d pulse candidates"%len(dm_candlist))
+            
+            # Get rid of those near padding regions
+            if info.breaks: prune_border_cases(dm_candlist, offregions)
+
+            # Write the pulses to an ASCII output file, otherwise make an empty file
+            if opts.gzip:
+                with gzip.GzipFile(filenmbase+'.singlepulse.gz', mode='w') as outfile:
+                    if len(dm_candlist):
+                        outfile.write("# DM      Sigma      Time (s)     Sample    Downfact\n".encode('utf-8'))
+                        for cand in dm_candlist:
+                            outfile.write(str(cand).encode('utf-8'))
+            else: # not gzipped
+                with open(filenmbase+'.singlepulse', mode='w') as outfile:
+                    if len(dm_candlist):
+                        outfile.write("# DM      Sigma      Time (s)     Sample    Downfact\n")
+                        for cand in dm_candlist:
+                            outfile.write(str(cand))
+
+            # Add these candidates to the overall candidate list
+            for cand in dm_candlist:
+                candlist.append(cand)
+            num_v_DMstr[DMstr] = len(dm_candlist)
+```
