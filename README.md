@@ -195,13 +195,6 @@ def read_singlepulse_files(infiles, threshold, T_start, T_end):
                 orig_dt = dt
                 if useffts:
                     fftd_kerns = make_fftd_kerns(default_downfacts, fftlen)
-            if info.breaks:
-                offregions = list(zip([x[1] for x in info.onoff[:-1]],
-                                 [x[0] for x in info.onoff[1:]]))
-
-                # If last break spans to end of file, don't read it in (its just padding)
-                if offregions[-1][1] == N - 1:
-                    N = offregions[-1][0] + 1  
 ``` 
 * Here we search for `filname` if it ends with `.dat` file or not if yes then we use `rfind` to find the `.dat` file index and try to save only name of the file in `filenmbase` if not then `filename` is saved as it is in `filenmbase`
 
