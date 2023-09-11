@@ -1,10 +1,7 @@
-#Presto-single-pulse-search-explaination-
-In the first line we assigning name to the block that if it is executed as a main prgram or module etc .
-
-imported `hotshot` - used to profile the code block i.e statistical infos like running time and etc 
-
-So in this block of the code we are just calling the main function as conditions under `if(0)` won`t be executed
-
+Presto-single-pulse-search-explaination-
+*In the first line we assigning name to the block that if it is executed as a main prgram or module etc .
+*imported `hotshot` - used to profile the code block i.e statistical infos like running time and etc 
+*So in this block of the code we are just calling the main function as conditions under `if(0)` won`t be executed
 ```
 def main():
     parser = OptionParser(usage)
@@ -33,18 +30,15 @@ def main():
     (opts, args) = parser.parse_args()
 ```
 * This is the part of main fucntion in which they are defining list of options for users to use by using `optparse` python module  
-
 * End of completion we used `(opts, args) = parser.parse_args()` to tell `optparse` that we`re done
-
+  
 `parse_args()` returns two values:
 * options, an object containing values for all of your options—e.g. if --file takes a single string argument, then options.file will be the filename supplied by the user, or None if the user did not supply that option
 * args, the list of positional arguments leftover after parsing options
-
 *  `Action = store`tells to take the next argument and store it to your choosen destination
 and the flags true/false  just to put the dest value to true or false`
 * `help` - use to give some info about the command 
 * `dest` - destination 
-
 ```
  if len(args)==0:
         if opts.globexp==None:
