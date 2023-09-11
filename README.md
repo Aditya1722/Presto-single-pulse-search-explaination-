@@ -215,6 +215,7 @@ def read_singlepulse_files(infiles, threshold, T_start, T_end):
 * if `downsample` list is empty then the first value of `default_sample` if filled
 * This part runs only for first file it will take informtion of `N` and `dt` and store it in some variable  `orig_N` & `orig_dt`
 * if `useffts` is true then it runs a function `make_fftd_kerns` by sending argument - `default_downfacts,fftlen`
+* This code identifies breaks or gaps in the data, constructs offregions to represent data regions without breaks, and then checks if the last break extends to the end of the file. If it does, the code updates N to exclude the padding at the end of the data. This ensures that only the meaningful data regions are considered in further processing.
 As we encontered this function `make_fft_kerns` so we will discuss that before moving forward to next code part d
 ```
 def make_fftd_kerns(downfacts, fftlen):
