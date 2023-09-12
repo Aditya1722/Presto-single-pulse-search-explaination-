@@ -51,9 +51,9 @@ def main():
 * End of completion we used `(opts, args) = parser.parse_args()` to tell `optparse` that we`re done
   
 `parse_args()` returns two values:
-* options, an object containing values for all of your options—e.g. if --file takes a single string argument, then options.file will be the filename supplied by the user, or None if the user did not supply that option
+* options - an object containing values for all of your options—e.g. if --file takes a single string argument, then options.file will be the filename supplied by the user, or None if the user did not supply that option
 * args, the list of positional arguments leftover after parsing options
-*  `Action = store`tells to take the next argument and store it to your choosen destination
+* `Action = store`tells to take the next argument and store it to your choosen destination
 and the flags true/false  just to put the dest value to true or false`
 * `help` - use to give some info about the command 
 * `dest` - destination 
@@ -76,11 +76,8 @@ and the flags true/false  just to put the dest value to true or false`
 ```
 * In this block of code `opts.globexp` is checking the variable if given any in command line . eg ` --globexp .txt `
 * usefft & dosearch are assigned to be true 
-
 * if `opts.xwin` is true then pgplot_device is assignned to "/XWIN" otherwise "" 
-
 ```
-
     fftlen = 8192     # Should be a power-of-two for best speed
     chunklen = 8000   # Must be at least max_downfact less than fftlen
     assert(opts.detrendfact in [1,2,4,8,16,32])
@@ -103,16 +100,15 @@ and the flags true/false  just to put the dest value to true or false`
     else:
         filenmbase = args[0]
 ```
-* `fftlen` = 8192 (for fourier transform )
-* `chunklen` for chunks you wana divide .
+* `fftlen` = 8192 (for fourier transform)
+* `chunklen` for chunks you wana divide the whole data series 
 * assert statement is used to check if a condition is True, and if it's not, it raises an error.
-* `detrendfact` factor of 2  (checking if detrendfact have the values mentioned in code )
-* `dtrendlen` is decided by `dtrendfact`
-* Then dtrendlen , chunklen , fflten all are recalculated considering dtrendfact user input (next2_to_n is a lib imported from presto )
-* `blocks per chunk` is no. of blocks in a chunk we can have
-* overlap , worklen is defined whereas  max_downfact and default_downfact are constant
+* `detrendfact` should be a factor of 2  (checking if detrendfact have the values mentioned in code )
+* `dtrendlen` is the lenght over which you decide to remove trend
+* dtrendlen , chunklen , fflten all are recalculated considering dtrendfact user input (next2_to_n is a lib imported from presto )
+* `blocks per chunk` is no. of blocks in a chunk of length chunklen
+* overlap is how much , worklen is defined whereas  max_downfact and default_downfact are constant
 * checking arg[0] contains what type of extension and we will save it in `filenmbase` without extension 
-
 ```
 # Don't do a search, just read results and plot
     if not dosearch:
@@ -127,7 +123,8 @@ and the flags true/false  just to put the dest value to true or false`
 
 ```
 * From previous code block if we get a file with extension `.singlepulse` then dosearch is set to false as we have seen .
-* In this block code we're deciding to do a search or not by checking  if dosearch is false then it will get values of  info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` by reading single pulse files
+* Deciding to do a search if dosearch false then it will get values of info, DMs, candlist, num_v_DMstr from fucntion `read_singlepulse_files()` 
+  by reading single pulse files
 * As they are referring to single pulse files funtion first let look into down below code :
 ```
 def read_singlepulse_files(infiles, threshold, T_start, T_end):
