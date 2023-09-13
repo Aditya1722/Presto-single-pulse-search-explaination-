@@ -223,10 +223,11 @@ def make_fftd_kerns(downfacts, fftlen):
         fftd_kerns.append(rfft(kern / np.sqrt(downfact), -1))
     return fftd_kerns
 ```
-* `fftd_kerns` for storing fft kernels 
-* `For` loop over downfact values and creating an array of 0 of length `fftlen`(value given in main fucntion )
-* For each `downfact` making a shape of kernel for each downfact values depending on if it is odd or even also if you look at the shape it is not like normal a box car for eg if you take downfact = 8 then the first half 5 index will be 1 and last 3 index will be 1 so that the total is 8 so that the last ones  will overlap with the next one.
-* Then normalising then taking fft of that .
+* `fftd_kerns` for storing kernels fft values 
+* `kern` array of length `fftlen`
+* For each `downfact` making a shape of kernel
+* For each downfact values depending on if it is odd or even also if you look at the shape it is not like normal a box car for eg if you take downfact = 8 then the first half 5 index will be 1 and last 3 index will be 1 so that the total is 8 so that the last ones  will overlap with the next one.
+* Then normalising and taking fft of that .
 * Now continution of code from the main funtion
   ```
   if info.breaks:
@@ -238,13 +239,11 @@ def make_fftd_kerns(downfacts, fftlen):
                     N = offregions[-1][0] + 1
   ```
 
+* still not sure about this code
 * This code identifies breaks or gaps in the data, constructs offregions to represent data regions without breaks, and then checks if the last 
   break extends to the end of the file. If it does, the code updates N to exclude the padding at the end of the data. This ensures that only the 
   meaningful data regions are considered in further processing.
-
-* what is info.break ?
-* if it is true then it creates a list named `offregion`
-* no idea about this ?
+  
   ```
   # Compute the file length in detrendlens
             roundN = N // detrendlen * detrendlen
@@ -271,16 +270,16 @@ def make_fftd_kerns(downfacts, fftlen):
                     tmpchunk = timeseries[ii].copy()
                     tmpchunk.sort()
   ```
-* The purpose of this starting calculation to find roundN is to handle cases where the data length (N) is not an exact multiple of detrendlen, 
+* roundN is to handle cases where the data length (N) is not an exact multiple of detrendlen 
   ensuring that you work with complete chunks of detrendlen and any leftover data at the end is excluded from further analysis.
 * `numchunks` is the how many chunks of `chunkslen` can fit in total obs length `(roundN)`
-* we reads the binary data from the specified file (filenm) using `np.filefrom` and loads it into the timeseries array
+* reading (filenm) in binary form using `np.filefrom` and loads it into the timeseries array
 * splitting the file into chunks for detrending by finding `numblock`.
-* Rehaping the timeseries into rows = numblocks column = detrendlen to form a 2D array which will contains data as `eg,` Row 1 contains the 
+* Rehaping timeseries into rows = numblocks column = detrendlen to form a 2D array which will contains data as `eg,` Row 1 contains the 
   first 200 data points (from index 0 to 199). Row 2 contains the next 200 data points (from index 200 to 399).
 * `stds` - making 1D array of length numblock .
 * de-trend the data one chunk at a time .
-* As enumerates returns  a tuple after every iteration as index and the actual data so we assigned a for loop ii(index) and chunk(actual data)
+* `enumerates()` returns  a tuple after every iteration as index and the actual data so we assigned a for loop ii(index) and chunk(actual data)
 * if `opts.fast`(usefaster method of detrending) is true then remove median values from chunks(chunk we`re copying is time data or frequency data )
   > quicker than more complex detrending methods.
 *  if `opts.fast` is false then at every chunk we will use `scipy.signal.detrend(data,type'linear')`
@@ -296,12 +295,8 @@ def make_fftd_kerns(downfacts, fftlen):
                                     (0.95*detrendlen))
             stds *= 1.148
 ```
-* Here we remove 5% what is tom and bottom ?
-* what is this formula o std ?
-* why we correcting for stds? 
-* 1.148 correction factor addition in stds
-* why we diving detrendln by by 40 bcz we want to take only middle portion of data s outliers are removed .
-
+* Removing 2.5% from both sides in a random gaussian will lead us to take std of portion excluding the 2.5% portion which explains the diving the `dtrendlen` by 40 as shown which means indexing staring from 2.5 % of `dtrendlen`
+* 1.148 correction factor addition in stds because we excluded some samples which lead to change in stds 
 ```
 # sort the standard deviations and separate those with
             # very low or very high values
@@ -330,10 +325,10 @@ def make_fftd_kerns(downfacts, fftlen):
             print("  Now searching...")
 
 ```
-* first we copied the stds and sort it in an array `sort_stds` then try to find the max std deviation in the lower and higher part of `sort_stds`
-* Then store those indexes of max change and calculate the std of std and store it in std_stds  and also median of this in `median_stds`
-* Now searching for bad chunks to not waste time on searching them
-* 
+* soritng stds in `sort_stds` then try to find the max std deviation in the lower and higher part of `sort_stds`
+* Then store those indexes of max change and calculate the std of std and store it in `std_stds`  and also median of this in `median_stds`
+* Now searching for bad chunks to not waste time on searching them and by applying some threshold we get the badblocks index and replace them by median_stds
+* or else jsut create empty array for bad_blocks 
 ```
 # Now normalize all of the data and reshape it to 1-D
             timeseries /= stds[:,np.newaxis]
