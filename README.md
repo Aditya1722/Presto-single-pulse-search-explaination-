@@ -1,7 +1,7 @@
-
 For refrence the orignal presto sps code link - https://github.com/scottransom/presto/blob/master/bin/single_pulse_search.py 
 
-#Presto-single-pulse-search-explaination-
+**Presto-single-pulse-search-explaination-**
+
 ```
 if __name__ == '__main__':
     if (0):
