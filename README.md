@@ -342,7 +342,7 @@ def make_fftd_kerns(downfacts, fftlen):
             # Convert to a set for faster lookups below
             bad_blocks = set(bad_blocks)
 ```
-* In this we normalize the time series by diving with their respective `stds` and convert it into 1D
+* Normalising the time series by diving with their respective `stds` and convert it into 1D
 * setting all bad blocks in timeseries to 0
 ```
 # Step through the data
@@ -362,9 +362,9 @@ def make_fftd_kerns(downfacts, fftlen):
 ```
 * Created  a DM list
 * `numchunks` is the no. of chunks in `roundN` of length `chunklen`
-* `loin` & `hiind` gives the idex of starting & ending of that chunk  in this overalp concept is not clear ?
+* `loin` & `hiind` gives the idex of starting & ending of that chunk  in this overalp 
 * begining and end is dealt differently for copying the data from timeseries to `chunk`
-* To understand the expression you can try with the image belowfor better visualisation (i struggled without observation ) 
+* To understand the expression you can try with the image below for better visualisation (i struggled without visuals you might too ) 
 ![overal diagram](https://github.com/Aditya1722/Presto-single-pulse-search-explaination-/assets/73752922/d5652001-e1de-4ff2-aa43-c205da4d31ff)
 
 ```
@@ -378,9 +378,10 @@ def make_fftd_kerns(downfacts, fftlen):
                     # This is the good part of the data (end effects removed)
                     goodchunk = chunk[overlap:-overlap]
 ```
-* In this code block we dealing with the blocks in a chunk - by finding no. of blocks  i'm away from current chunk from  `lowblock`
-* Then for fidning the current chuck index we use the block information as seen above
-* `localgoodblock` 
+* lowblock - finding no. of blocks  i'm away from starting
+* currentblocks - gives index of blocks in the current chunk
+* `localgoodblock` -
+* store chunk data to goodchunk indexing i'm still figuring out  
 ```
 # need to pass blocks/chunklen, localgoodblocks
                     # dm_candlist, dt, opts.threshold to cython routine
@@ -400,11 +401,11 @@ def make_fftd_kerns(downfacts, fftlen):
                             time = bin * dt
                             dm_candlist.append(candidate(info.DM, val, time, bin, 1))
 ```
-* In this block we make a `variable` and store the non zeros values indexes using `np.flatnonzerofrom()` from `goodchunk` with a condition it should be greater than threshold S/N .
+* `hibins` store non zeros values indexe using `np.flatnonzerofrom()` from `goodchunk` with a condition it should be greater than threshold S/N .
 * hibins contains the indices of potential candidates within the entire dataset.
 * hivals contains the values of these potential candidates.
-* hiblocks contains the block numbers where these candidates were found within the current chunk.
-* Doesn't bin contains indexes of a chunk ? calculate time of each then store info in `dm_candidate`
+* hiblocks contains the block numbers where these candidates were found within the current chunk.(not sure)
+* calculate time of each then store info in `dm_candlist`
 *  
 ```
                     # Prepare our data for the convolution
