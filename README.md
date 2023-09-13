@@ -447,10 +447,10 @@ def make_fftd_kerns(downfacts, fftlen):
                                               candidate(info.DM, val, time, bin, downfact))
 ```
 
-* first we are  convolving using the info og  fft  and kernel we have
-* cant understand the else part here
+* Convolving using the info of fft  and kernel we have
+* Convolution using scipy.convolve without fft
 * good chunk we get from this will be used to calculate again the hibins, hivals , hiblocks
-* prune_related1 function is responsible for removing candidates that are close to other candidates but less significant.
+* prune_related1 function is responsible for removing candidates that are close to other candidates but less significant and add them in `dm_candlist`
 ```
 # Now walk through the dm_candlist and remove the ones that
             # are within the downsample proximity of a higher
@@ -480,3 +480,7 @@ def make_fftd_kerns(downfacts, fftlen):
                 candlist.append(cand)
             num_v_DMstr[DMstr] = len(dm_candlist)
 ```
+* Here we again do some candidate removing on basis of some criteria written in fucntion `prune_related2`
+* get rid of padding region using fucntion `prune_border_cases`
+  *In the end we produce an output file by writing DM , Sigma ,Time , sample , downfact values of every candidate we found in the process
+* Plotting section is not discussed here (maybe later)
