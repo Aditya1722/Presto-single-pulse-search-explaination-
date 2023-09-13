@@ -194,18 +194,15 @@ def read_singlepulse_files(infiles, threshold, T_start, T_end):
 * If `filname` ends with `.dat` file then using  `rfind` to find the `.dat` file index and try to save only name of the file in `filenmbase` if 
   not then `filename` is saved as it is in `filenmbase`.
 * Filenmbase we got from previous step is added with an extension `.inf` to extract the informatiom using `info.info()` and save it in `info`
-* Then we extract DM info from info.dm and first add it in DMstr and then append DM values in `DMs`
-* Then were extracting the info of `dt`(time step size) and `N`(no. of time bing )so we can get observation time(`obstime`)
+* Extract DM info from info.dm and add it in DMstr and then append DM values in `DMs`
+* calculating observation time(`obstime`) using info of `dt`(time step size) and `N`(no. of time bing )
 * `maxwidth` is either given by you or default
 * it checks if `maxwidth`(which you entered) is > than 0 
   > if yes then compare it with each (`default_sample list` values)*`dt`  and if it is < than `maxwidth` than add it to the list of `downnfacts`
   > if no then store all the values which are less than the `max_downfact` which is already defined as 30.
 * If `downsample` list is empty then the first value of `default_sample` if filled.
-* This part runs only for first file it will take informtion of `N` and `dt` and store it in some variable  `orig_N` & `orig_dt`
+* From first file `N` and `dt` values are stored in variable  `orig_N` & `orig_dt`
 * If `useffts` is true then it runs a function `make_fftd_kerns` by sending argument - `default_downfacts,fftlen`
-* This code identifies breaks or gaps in the data, constructs offregions to represent data regions without breaks, and then checks if the last 
-  break extends to the end of the file. If it does, the code updates N to exclude the padding at the end of the data. This ensures that only the 
-  meaningful data regions are considered in further processing.
 As we encontered this function `make_fft_kerns` so we will discuss that before moving forward to next code part d
 ```
 def make_fftd_kerns(downfacts, fftlen):
@@ -226,9 +223,9 @@ def make_fftd_kerns(downfacts, fftlen):
         fftd_kerns.append(rfft(kern / np.sqrt(downfact), -1))
     return fftd_kerns
 ```
-* Int his block assigning `fftd_kerns` an empty list 
+* `fftd_kerns` for storing fft kernels 
 * `For` loop over downfact values and creating an array of 0 of length `fftlen`(value given in main fucntion )
-* For each `downfact` value making a shape of kernel for each downfact values depending on if it is odd or even also if you look at the shape it is not like normal a box car for eg if you take downfact = 8 then the first half 5 index will be 1 and last 3 index will be 1 so that the total is 8 so that the last ones  will overlap with the next one.
+* For each `downfact` making a shape of kernel for each downfact values depending on if it is odd or even also if you look at the shape it is not like normal a box car for eg if you take downfact = 8 then the first half 5 index will be 1 and last 3 index will be 1 so that the total is 8 so that the last ones  will overlap with the next one.
 * Then normalising then taking fft of that .
 * Now continution of code from the main funtion
   ```
@@ -240,6 +237,10 @@ def make_fftd_kerns(downfacts, fftlen):
                 if offregions[-1][1] == N - 1:
                     N = offregions[-1][0] + 1
   ```
+
+* This code identifies breaks or gaps in the data, constructs offregions to represent data regions without breaks, and then checks if the last 
+  break extends to the end of the file. If it does, the code updates N to exclude the padding at the end of the data. This ensures that only the 
+  meaningful data regions are considered in further processing.
 
 * what is info.break ?
 * if it is true then it creates a list named `offregion`
